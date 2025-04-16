@@ -1,0 +1,18 @@
+Subject: use /usr/libdata specifically on FreeBSD, not kFreeBSD
+From: Steven Chamberlain <steven@pyro.eu.org>
+Date: Sun, 21 Feb 2016 15:20:07 +0000
+
+--- a/host/libhackrf/CMakeLists.txt
++++ b/host/libhackrf/CMakeLists.txt
+@@ -75,9 +75,9 @@
+ set(includedir \${prefix}/include)
+ set(libpkgdata lib${LIB_SUFFIX})
+ 
+-if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
++if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+     set(libpkgdata "libdata")
+-endif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
++endif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+ 
+ CONFIGURE_FILE(
+     ${CMAKE_CURRENT_SOURCE_DIR}/libhackrf.pc.in

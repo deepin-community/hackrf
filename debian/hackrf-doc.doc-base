@@ -1,0 +1,11 @@
+Document: hackrf-doc
+Title: HackRF's Documentation
+Author: Michael Ossmann <mike@ossmann.com> and neighbors
+Section: Programming
+
+Format: HTML
+Index: /usr/share/doc/hackrf/html/index.html
+Files: /usr/share/doc/hackrf/html/*
+
+Format: PDF
+Files: /usr/share/doc/hackrf/hackrf.pdf.gz

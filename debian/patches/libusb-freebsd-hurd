@@ -1,0 +1,17 @@
+Description: Handle Debian kFreeBSD architecture.
+Author: A. Maitland Bottoms <bottoms@debian.org>
+
+--- a/host/cmake/modules/FindUSB1.cmake
++++ b/host/cmake/modules/FindUSB1.cmake
+@@ -25,9 +25,9 @@
+   ENDIF(NOT WIN32)
+ 
+   set(LIBUSB_LIBRARY_NAME usb-1.0)
+-  IF(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
++  IF((${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD") OR (CMAKE_SYSTEM_NAME STREQUAL "kFreeBSD") OR (CMAKE_SYSTEM_NAME STREQUAL "GNU"))
+     set(LIBUSB_LIBRARY_NAME usb)
+-  ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
++  ENDIF((${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD") OR (CMAKE_SYSTEM_NAME STREQUAL "kFreeBSD") OR (CMAKE_SYSTEM_NAME STREQUAL "GNU"))
+ 
+   FIND_PATH(LIBUSB_INCLUDE_DIR libusb.h
+     PATHS ${PC_LIBUSB_INCLUDEDIR} ${PC_LIBUSB_INCLUDE_DIRS})

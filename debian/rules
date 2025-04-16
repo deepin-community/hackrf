@@ -1,4 +1,53 @@
 #!/usr/bin/make -f
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+export DEB_HOST_MULTIARCH
 
 %:
-	dh $@
+	dh $@ --sourcedirectory=host --builddirectory=build
+
+override_dh_auto_configure:
+	dh_auto_configure --sourcedirectory=host --builddirectory=build -- -DLIB_SUFFIX=/$(DEB_HOST_MULTIARCH)
+	- cp -p build/libhackrf/53-hackrf.rules debian/libhackrf0.udev
+
+override_dh_auto_build-indep: build-arch
+	cd docs && make html
+	cd docs && make latex
+	cd docs && make latexpdf
+	cd docs/build/html/_static && rm jquery.js
+	cd docs/build/html/_static && ln -s /usr/share/javascript/jquery/jquery.js jquery.js
+	cd docs/build/html/_static && rm _sphinx_javascript_frameworks_compat.js
+	cd docs/build/html/_static && ln -s /usr/share/sphinx/themes/basic/static/_sphinx_javascript_frameworks_compat.js _sphinx_javascript_frameworks_compat.js
+	cd docs/build/html/_static && rm doctools.js
+	cd docs/build/html/_static && ln -s /usr/share/sphinx/themes/basic/static/doctools.js doctools.js
+	cd docs/build/html/_static && rm language_data.js
+	cd docs/build/html/_static && ln -s /usr/share/sphinx/themes/basic/static/language_data.js_t language_data.js
+	cd docs/build/html/_static && rm searchtools.js
+	cd docs/build/html/_static && ln -s /usr/share/sphinx/themes/basic/static/searchtools.js searchtools.js
+	cd docs/build/html/_static && rm sphinx_highlight.js
+	cd docs/build/html/_static && ln -s /usr/share/sphinx/themes/basic/static/sphinx_highlight.js sphinx_highlight.js
+	rm -rf docs/build/html/_static/fonts
+	cp -p -r firmware-libopencm3/* firmware/libopencm3/
+	cd firmware && CFLAGS=-Wall CXXFLAGS=-Wall cmake -DCMAKE_TRY_COMPILE_TARGET_TYPE="STATIC_LIBRARY" -DCMAKE_VERBOSE_MAKEFILE=ON -DBOARD=HACKRF_ONE -B build_hackrf
+	cd firmware && cmake --build build_hackrf
+	cd firmware && CFLAGS=-Wall CXXFLAGS=-Wall cmake -DCMAKE_TRY_COMPILE_TARGET_TYPE="STATIC_LIBRARY" -DCMAKE_VERBOSE_MAKEFILE=ON -DBOARD=JAWBREAKER -B build_jawbreaker
+	cd firmware && cmake --build build_jawbreaker
+	cd firmware && CFLAGS=-Wall CXXFLAGS=-Wall cmake -DCMAKE_TRY_COMPILE_TARGET_TYPE="STATIC_LIBRARY" -DCMAKE_VERBOSE_MAKEFILE=ON -DBOARD=RAD1O -B build_rad1o
+	cd firmware && cmake --build build_rad1o
+	cp -p firmware/build_jawbreaker/hackrf_usb/hackrf_usb.bin firmware/hackrf_jawbreaker_usb.bin
+	cp -p firmware/build_hackrf/hackrf_usb/hackrf_usb.bin firmware/hackrf_one_usb.bin
+	cp -p firmware/build_rad1o/hackrf_usb/hackrf_usb.bin firmware/hackrf_rad1o_usb.bin
+	chmod -x firmware/hackrf_jawbreaker_usb.bin
+	chmod -x firmware/hackrf_one_usb.bin
+	chmod -x firmware/hackrf_rad1o_usb.bin
+	cp -p firmware/build_jawbreaker/hackrf_usb/hackrf_usb.dfu firmware/hackrf_jawbreaker_usb.dfu
+	cp -p firmware/build_hackrf/hackrf_usb/hackrf_usb.dfu firmware/hackrf_one_usb.dfu
+	cp -p firmware/build_rad1o/hackrf_usb/hackrf_usb.dfu firmware/hackrf_rad1o_usb.dfu
+
+override_dh_installdocs-indep:
+	dh_installdocs --indep
+
+override_dh_installudev:
+	dh_installudev
+	# This should be harmless for indep builds or after dh_installudev changes the install path.
+	set -e; if test -d debian/libhackrf0/lib/udev/rules.d; then mv debian/libhackrf0/lib/udev debian/libhackrf0/usr/lib; fi
+	set -e; if test -d debian/libhackrf0/lib; then rmdir debian/libhackrf0/lib; fi
