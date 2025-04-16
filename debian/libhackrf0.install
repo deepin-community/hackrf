@@ -1,0 +1,2 @@
+debian/com.greatscottgadgets.hackrf.metainfo.xml usr/share/metainfo
+usr/lib/*/lib*.so.*

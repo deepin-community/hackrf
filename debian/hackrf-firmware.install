@@ -1,0 +1,8 @@
+debian/README.firmware usr/share/hackrf
+firmware/cpld/sgpio_if/default.xsvf usr/share/hackrf
+firmware/hackrf_jawbreaker_usb.bin usr/share/hackrf
+firmware/hackrf_jawbreaker_usb.dfu usr/share/hackrf
+firmware/hackrf_one_usb.bin usr/share/hackrf
+firmware/hackrf_one_usb.dfu usr/share/hackrf
+firmware/hackrf_rad1o_usb.bin usr/share/hackrf
+firmware/hackrf_rad1o_usb.dfu usr/share/hackrf

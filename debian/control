@@ -1,15 +1,102 @@
-Source: template-repository
-Section: unknown
+Source: hackrf
+Section: libs
 Priority: optional
-Maintainer: Tsic404 <liuheng@deepin.org>
-Build-Depends: debhelper (>= 11)
-Standards-Version: 4.1.3
-Homepage: https://github.com/deepin-community/template-repository
-#Vcs-Browser: https://salsa.debian.org/debian/deepin-community-template-repository
-#Vcs-Git: https://salsa.debian.org/debian/deepin-community-template-repository.git
+Maintainer: A. Maitland Bottoms <bottoms@debian.org>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+	       gcc-arm-none-eabi,
+               libfftw3-dev,
+	       libnewlib-arm-none-eabi,
+               libusb-1.0-0-dev,
+               pkgconf
+Build-Depends-Indep: dfu-util,
+                     latexmk,
+                     python3-sphinx,
+                     python3-sphinx-rtd-theme,
+                     python3-yaml,
+                     tex-gyre,
+                     texlive-latex-extra
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Homepage: http://greatscottgadgets.com/hackrf/
+Vcs-Browser: https://salsa.debian.org/bottoms/pkg-hackrf
+Vcs-Git: https://salsa.debian.org/bottoms/pkg-hackrf.git
 
-Package: template-repository
+Package: hackrf-doc
+Section: doc
+Architecture: all
+Depends: fonts-font-awesome,
+         fonts-lato,
+         fonts-roboto-slab,
+         libjs-jquery,
+         libjs-underscore,
+         sphinx,
+         ${misc:Depends}
+Description: Software defined radio peripheral - documentation
+ HackRF is an open source Software Defined Radio that can receive
+ and transmit between 30 MHz and 6 GHz. HackRF has a 20 MHz bandwidth.
+ It is a High Speed USB device powered by the USB bus.
+ .
+ This package contains generated documentation.
+
+Package: libhackrf-dev
+Section: libdevel
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Pre-Depends: ${misc:Pre-Depends}
+Depends: libhackrf0 (= ${binary:Version}), ${misc:Depends}
+Description: Software defined radio peripheral - development
+ HackRF is an open source Software Defined Radio that can receive
+ and transmit between 30 MHz and 6 GHz. HackRF has a 20 MHz bandwidth.
+ It is a High Speed USB device powered by the USB bus.
+ .
+ This package contains development files.
+
+Package: libhackrf0
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Multi-Arch: same
+Description: Software defined radio peripheral - runtime library
+ HackRF is an open source Software Defined Radio that can receive
+ and transmit between 30 MHz and 6 GHz. HackRF has a 20 MHz bandwidth.
+ It is a High Speed USB device powered by the USB bus.
+ .
+ This package contains the shared library.
+
+Package: hackrf
+Section: comm
+Architecture: any
+Depends: libhackrf0 (= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends}
+Description: Software defined radio peripheral - utilities
+ HackRF is an open source Software Defined Radio that can receive
+ and transmit between 30 MHz and 6 GHz. HackRF has a 20 MHz bandwidth.
+ It is a High Speed USB device powered by the USB bus.
+ .
+ This package contains a set of command line utilities:
+  * hackrf_clock: HackRF clock configuration utility
+  * hackrf_cpldjtag: program CLPD
+  * hackrf_debug: chip register read/write/config tool
+  * hackrf_info: probe device and show configuration
+  * hackrf_operacake: control of operacake board via hackrf
+  * hackrf_spiflash: read and write flash data from file.
+  * hackrf_sweep: control frequency sweep of hackrf
+  * hackrf_transfer: file based transmit and receive sdr
+
+Package: hackrf-firmware
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Recommends: hackrf
+Suggests: dfu-util
+Description: Firmware for HackRF devices
+ The HackRF hardware needs some firmware to run. The firmware is built with
+ arm-none-eabi-gcc. This package contains a number of firmware images that
+ may be programmed into the HackRF hardware using the 'hackrf_spiflash -w'
+ command or dfu-util.
+ .
+ The following hardware is supported:
+  * hackrf_jawbreaker
+  * hackrf_one
+  * hackrf_rad1o
+ .
+ The firmware images are installed in /usr/share/hackrf/firmware/

@@ -1,0 +1,40 @@
+To update firmware on your HackRF you can use hackrf_spiflash from the hackrf package.
+
+$ hackrf_spiflash -w hackrf_one_usb.bin
+
+It is possible to use a USB Device Firmware Upgrade (DFU) method to load
+firmware into RAM.  This is normally only required to recover a device that has
+had faulty firmware loaded, but it can also be useful for firmware developers.
+
+For loading firmware into RAM with DFU you will need the dfu-util package installed:
+
+$ sudo apt install dfu-util
+
+To start up HackRF One in DFU mode, hold down the DFU button while powering it
+on or while pressing and releasing the RESET button.  Release the DFU button
+after the 3V3 LED illuminates.
+
+A .dfu file is built by default when building firmware.  Alternatively you can
+use a known good .dfu file from a release package.  Load the firmware into RAM
+with:
+
+$ dfu-util --device 1fc9:000c --alt 0 --download hackrf_one_usb.dfu
+
+Then use the hackrf_spiflash firmware update procedure above to write the
+“.bin” firmware image to SPI flash.
+
+
+Updating the CPLD
+
+Older versions of HackRF firmware (prior to release 2021.03.1) require
+an additional step to program a bitstream into the CPLD.
+
+To update the CPLD image, first update the SPI flash firmware,
+libhackrf, and hackrf-tools to the version you are installing. Then:
+
+hackrf_cpldjtag -x firmware/cpld/sgpio_if/default.xsvf
+
+After a few seconds, three LEDs should start blinking. This indicates
+that the CPLD has been programmed successfully. Reset the HackRF
+device by pressing the RESET button or by unplugging it and plugging
+it back in.

@@ -1,0 +1,9 @@
+debian/hackrf_biast.1
+debian/hackrf_clock.1
+debian/hackrf_cpldjtag.1
+debian/hackrf_debug.1
+debian/hackrf_info.1
+debian/hackrf_operacake.1
+debian/hackrf_spiflash.1
+debian/hackrf_sweep.1
+debian/hackrf_transfer.1
