@@ -1,3 +1,9 @@
+hackrf (2024.02.1-3deepin1) unstable; urgency=medium
+
+  * fix missing libopencm3 path
+
+ -- Chang Yang <yangchang@deepin.org>  Wed, 16 Apr 2025 17:48:33 +0800
+
 hackrf (2024.02.1-3) unstable; urgency=medium
 
   * Relicense com.greatscottgadgets.hackrf.metainfo.xml (Closes: #1078193)

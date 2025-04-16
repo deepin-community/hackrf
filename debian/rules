@@ -26,6 +26,7 @@ override_dh_auto_build-indep: build-arch
 	cd docs/build/html/_static && rm sphinx_highlight.js
 	cd docs/build/html/_static && ln -s /usr/share/sphinx/themes/basic/static/sphinx_highlight.js sphinx_highlight.js
 	rm -rf docs/build/html/_static/fonts
+	mkdir -p firmware/libopencm3
 	cp -p -r firmware-libopencm3/* firmware/libopencm3/
 	cd firmware && CFLAGS=-Wall CXXFLAGS=-Wall cmake -DCMAKE_TRY_COMPILE_TARGET_TYPE="STATIC_LIBRARY" -DCMAKE_VERBOSE_MAKEFILE=ON -DBOARD=HACKRF_ONE -B build_hackrf
 	cd firmware && cmake --build build_hackrf
